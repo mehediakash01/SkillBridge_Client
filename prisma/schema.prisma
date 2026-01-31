@@ -6,18 +6,30 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-enum Role{
+
+enum Role {
   STUDENT
   TUTOR
   ADMIN
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
   password String
-  role Role @default(STUDENT)
+  role     Role    @default(STUDENT)
   isBanned Boolean @default(false)
 
+  tutorProfile TutorProfile?
+}
+
+model TutorProfile {
+  id          Int     @id @default(autoincrement())
+  bio         String
+  hourlyRate  Decimal
+  averageRate Decimal @default(0.00)
+  experience  Int
+  studentId   Int     @unique
+  Student     User    @relation(fields: [studentId], references: [id])
 }
