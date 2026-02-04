@@ -30,7 +30,22 @@ const createOrUpdateUser = async (userId:string,
 
 
 }
+const getTutorProfileById = async (userId:string)=>{
+    return  prisma.tutorProfile.findUnique({
+        where:{
+            studentId:userId
+        },
+        include: {
+      tutorSubjects: {
+        include: { category: true },
+      },
+      bookings: true,
+    },
+    })
+
+}
 
 export const tutorService = {
-    createOrUpdateUser
+    createOrUpdateUser,
+    getTutorProfileById
 }

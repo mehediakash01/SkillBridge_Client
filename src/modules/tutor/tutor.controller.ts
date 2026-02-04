@@ -28,7 +28,24 @@ sendResponse(res,{
 
 )
 
+const getMyProfile = catchAsync(
+    async(req:Request,res:Response)=>{
+        const user = req.user;
+        if (!user){
+             throw new Error("User not authenticated");
+        }
+        const {id} = user;
+
+     const result = await tutorService.getTutorProfileById(id)
+     sendResponse(res,{
+        statusCode:200,
+        success:true,
+        message:"successfully retrieved profile information",
+        data:result
+     })
+    }
+)
 
 export const tutorController = {
-    createTutor
+    createTutor, getMyProfile
 }
