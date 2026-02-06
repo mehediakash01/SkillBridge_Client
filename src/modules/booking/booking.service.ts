@@ -96,6 +96,22 @@ const createBooking = async (studentId: string, payload: BookingPayload) => {
   return booking;
 };
 
+
+
+// getting students own booking by id
+
+const getOwnBooking = async(userId:string)=>{
+    return  prisma.booking.findMany({
+        where: {
+      studentId: userId
+    },
+    include: { Tutor: true },
+   
+    })
+
+}
+
 export const bookingService = {
   createBooking,
+  getOwnBooking
 };

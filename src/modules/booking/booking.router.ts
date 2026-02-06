@@ -9,4 +9,9 @@ router.post(
   sessionAuth(UserRole.STUDENT),
   bookingController.createBooking
 );
+router.get(
+  "/me",
+  sessionAuth(UserRole.STUDENT),
+  bookingController.getOwnBooking
+);
 export const bookingRouter:Router = router;
