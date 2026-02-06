@@ -21,4 +21,11 @@ router.get(
   sessionAuth(UserRole.TUTOR),
   bookingController.getTutorBooking
 );
+
+// update booking status
+router.patch(
+  "/:id/complete",
+  sessionAuth(UserRole.TUTOR),
+  bookingController.completeBooking
+);
 export const bookingRouter:Router = router;

@@ -44,8 +44,27 @@ const getTutorBooking = catchAsync(async (req:Request,res:Response)=>{
     })
 })
 
+// update booking status
+
+const completeBooking = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params 
+
+  const userId = req.user!.id;
+
+  const result = await bookingService.completeBooking(id as string, userId);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Booking marked as completed",
+    data: result,
+  });
+});
+
+
 export const bookingController = {
   createBooking,
   getOwnBooking,
-  getTutorBooking
+  getTutorBooking,
+  completeBooking
 };

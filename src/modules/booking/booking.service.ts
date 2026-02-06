@@ -129,8 +129,51 @@ const getTutorBooking = async(tutorId:string)=>{
 
 }
 
+
+// update booking status
+const completeBooking = async (bookingId: string, tutorUserId: string) => {
+  // 1 Find tutor profile
+  const tutorProfile = await prisma.tutorProfile.findUnique({
+    where: { id: tutorUserId },
+  });
+  
+
+  if (!tutorProfile) {
+    throw new Error("Tutor profile not found");
+  }
+
+  // 2. Find booking
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+  });
+
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // 3. Ownership check
+  if (booking.tutorId !== tutorProfile.id) {
+    throw new Error("You are not allowed to update this booking");
+  }
+  
+
+  // 4. Status validation
+  if (booking.status !== Booked_Status.confirmed) {
+    throw new Error("Only confirmed bookings can be completed");
+  }
+
+  // 5. Update status
+  return prisma.booking.update({
+    where: { id: bookingId },
+    data: {
+      status: Booked_Status.completed,
+    },
+  });
+};
+
 export const bookingService = {
   createBooking,
   getOwnBooking,
-  getTutorBooking
+  getTutorBooking,
+  completeBooking
 };
