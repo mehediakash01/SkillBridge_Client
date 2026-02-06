@@ -17,4 +17,11 @@ const router = express.Router();
         sessionAuth(UserRole.TUTOR),
         tutorController.updateTutorAvailability)
 
+        // get tutor own availability
+        router.get(
+  "/availability/me",
+  sessionAuth(UserRole.TUTOR),
+  tutorController.getMyAvailability
+);
+
 export  const createTutor:Router = router

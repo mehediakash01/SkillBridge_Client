@@ -1,6 +1,6 @@
 import { Week } from "../../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
-
+// create or update tutor profile
 const createOrUpdateUser = async (userId:string,
 
    payload: {
@@ -31,6 +31,7 @@ const createOrUpdateUser = async (userId:string,
 
 
 }
+// getting tutors profile by id
 const getTutorProfileById = async (userId:string)=>{
     return  prisma.tutorProfile.findUnique({
         where:{
@@ -45,7 +46,7 @@ const getTutorProfileById = async (userId:string)=>{
     })
 
 }
-// update tutor availability
+// denoted tutor availability input types
 type AvailabilitySlotInput = {
   dayOfWeek: Week;
   startTime: string;
@@ -87,7 +88,7 @@ const hasOverlap = (slots: AvailabilitySlotInput[]) => {
   return false;
 };
 
-
+// update tutor availability
 const updateTutorAvailability = async(tutorUserId:string, slots:AvailabilitySlotInput[])=>{
      if (!Array.isArray(slots) || slots.length === 0) {
     throw new Error( "Availability slots are required");
@@ -147,8 +148,41 @@ const updateTutorAvailability = async(tutorUserId:string, slots:AvailabilitySlot
 
 }
 
+
+// get tutors own availability
+export const getTutorAvailability = async (tutorUserId: string) => {
+  const tutorProfile = await prisma.tutorProfile.findUnique({
+    where: { studentId: tutorUserId },
+  });
+
+  if (!tutorProfile) {
+    throw new Error( "Tutor profile not found");
+  }
+
+  const availability = await prisma.availability.findMany({
+    where: { tutorId: tutorProfile.id },
+    orderBy: { startTime: "asc" },
+  });
+
+  const grouped: Record<string, { startTime: string; endTime: string }[]> = {};
+
+  availability.forEach(slot => {
+    const day = slot.dayOfWeek;
+    if (!grouped[day]) grouped[day] = [];
+
+    grouped[day].push({
+      startTime: slot.startTime.toISOString().slice(11, 16),
+      endTime: slot.endTime.toISOString().slice(11, 16),
+    });
+  });
+
+  return grouped;
+};
+
+
 export const tutorService = {
     createOrUpdateUser,
     getTutorProfileById,
-    updateTutorAvailability
+    updateTutorAvailability,
+    getTutorAvailability
 }

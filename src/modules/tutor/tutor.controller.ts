@@ -71,6 +71,23 @@ const updateTutorAvailability = catchAsync(
     }
 )
 
+// get tutors own availability
+export const getMyAvailability = catchAsync(
+  async (req: Request, res: Response) => {
+    const tutorUserId = req.user!.id;
+
+    const result = await tutorService.getTutorAvailability(tutorUserId);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Availability fetched successfully",
+      data: result,
+    });
+  }
+);
+
 export const tutorController = {
-    createTutor, getMyProfile,updateTutorAvailability
+    createTutor, getMyProfile,updateTutorAvailability,
+    getMyAvailability
 }
