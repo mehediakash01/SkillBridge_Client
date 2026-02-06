@@ -104,8 +104,26 @@ const getOwnBooking = async(userId:string)=>{
     return  prisma.booking.findMany({
         where: {
       studentId: userId
+      
     },
+     orderBy: { startTime: "desc" },
+
     include: { Tutor: true },
+   
+    })
+
+}
+// getting students own booking by id
+
+const getTutorBooking = async(tutorId:string)=>{
+    return  prisma.booking.findMany({
+        where: {
+      tutorId
+      
+    },
+     orderBy: { startTime: "asc" },
+
+    include: { Student: true },
    
     })
 
@@ -113,5 +131,6 @@ const getOwnBooking = async(userId:string)=>{
 
 export const bookingService = {
   createBooking,
-  getOwnBooking
+  getOwnBooking,
+  getTutorBooking
 };

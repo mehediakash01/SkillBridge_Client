@@ -29,8 +29,23 @@ const getOwnBooking = catchAsync(async (req:Request,res:Response)=>{
         data:result
     })
 })
+// getting tutor booking
+const getTutorBooking = catchAsync(async (req:Request,res:Response)=>{
+   const tutorId = req.user!.id;
+
+    
+    const result = await bookingService.getTutorBooking(tutorId);
+
+    sendResponse(res,{
+        success:true,
+        message:"retrieving booking successful",
+        statusCode:200,
+        data:result
+    })
+})
 
 export const bookingController = {
   createBooking,
-  getOwnBooking
+  getOwnBooking,
+  getTutorBooking
 };
