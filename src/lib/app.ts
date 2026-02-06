@@ -4,6 +4,7 @@ import cors from "cors"
 import { auth } from "./auth.js";
 import globalErrorHandler from "../middlewares/globalErrorHandler.js";
 import { createTutor } from "../modules/tutor/tutor.router.js";
+import { bookingRouter } from "../modules/booking/booking.router.js";
 
 
 const app:Application = express()
@@ -19,8 +20,9 @@ app.use(cors({
 ))
 app.all('/api/auth/{*any}', toNodeHandler(auth));
 // tutor routes
-app.use('/tutor',createTutor)
-
+app.use('/api/tutor',createTutor)
+// booking routes
+app.use('/api/bookings',bookingRouter)
 app.get('/',(req,res)=>{
     res.send("Ronaldo is the goat")
 })
