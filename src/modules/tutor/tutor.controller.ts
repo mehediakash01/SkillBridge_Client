@@ -53,7 +53,9 @@ const updateTutorAvailability = catchAsync(
     async(req:Request,res:Response)=>{
 
         const user = req.user;
+   
         const {slots} = req.body;
+       
         if (!user){
              throw new Error("User not authenticated");
         }

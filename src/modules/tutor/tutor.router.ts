@@ -13,6 +13,8 @@ const router = express.Router();
       sessionAuth(UserRole.TUTOR),
       tutorController.getMyProfile)
 // update tutor availability
-      router.put("/availability",tutorController.updateTutorAvailability)
+      router.put("/availability",
+        sessionAuth(UserRole.TUTOR),
+        tutorController.updateTutorAvailability)
 
 export  const createTutor:Router = router
