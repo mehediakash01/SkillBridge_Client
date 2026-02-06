@@ -5,6 +5,7 @@ import { auth } from "./auth.js";
 import globalErrorHandler from "../middlewares/globalErrorHandler.js";
 import { createTutor } from "../modules/tutor/tutor.router.js";
 import { bookingRouter } from "../modules/booking/booking.router.js";
+import { userReview } from "../modules/reviews/review.router.js";
 
 
 const app:Application = express()
@@ -23,6 +24,8 @@ app.all('/api/auth/{*any}', toNodeHandler(auth));
 app.use('/api/tutor',createTutor)
 // booking routes
 app.use('/api/bookings',bookingRouter)
+// review routes
+app.use("/api/reviews",userReview)
 app.get('/',(req,res)=>{
     res.send("Ronaldo is the goat")
 })
