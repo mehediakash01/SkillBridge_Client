@@ -6,6 +6,7 @@ import globalErrorHandler from "../middlewares/globalErrorHandler.js";
 import { createTutor } from "../modules/tutor/tutor.router.js";
 import { bookingRouter } from "../modules/booking/booking.router.js";
 import { userReview } from "../modules/reviews/review.router.js";
+import { adminRouter } from "../modules/admin/admin.router.js";
 
 
 const app:Application = express()
@@ -26,6 +27,8 @@ app.use('/api/tutors',createTutor)
 app.use('/api/bookings',bookingRouter)
 // review routes
 app.use("/api/reviews",userReview)
+// admin routes
+app.use("/api/admin",adminRouter)
 app.get('/',(req,res)=>{
     res.send("Ronaldo is the goat")
 })
