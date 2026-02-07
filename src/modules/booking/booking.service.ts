@@ -98,6 +98,21 @@ const createBooking = async (studentId: string, payload: BookingPayload) => {
 };
 
 
+ // getting booking details
+
+const getBookingDetails = async(bookingId:string)=>{
+    return  prisma.booking.findUnique({
+        where: {
+      id:bookingId
+      
+    },
+
+    include: { Tutor: true },
+   
+    })
+
+}
+
 
 // getting students own booking by id
 
@@ -226,6 +241,7 @@ export const bookingService = {
   createBooking,
   getOwnBooking,
   getTutorBooking,
+  getBookingDetails,
   completeBooking,
   cancelBooking
 };

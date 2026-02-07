@@ -21,6 +21,8 @@ router.get(
   sessionAuth(UserRole.TUTOR),
   bookingController.getTutorBooking
 );
+// getting booking details
+router.get("/:id",bookingController.getBookingDetails)
 
 // update booking status
 router.patch(
