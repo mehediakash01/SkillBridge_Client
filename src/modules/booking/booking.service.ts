@@ -1,6 +1,7 @@
 // booking.service.ts
 import { Booked_Status } from "../../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
+import { UserRole } from "../../middlewares/authMiddleware.js";
 
 
 interface BookingPayload {
@@ -171,9 +172,60 @@ const completeBooking = async (bookingId: string, tutorUserId: string) => {
   });
 };
 
+// cancel booking
+const cancelBooking = async (
+  bookingId: string,
+  userId: string,
+  role: UserRole
+) => {
+  // 1. Find booking
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+  });
+
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // 2. Status validation
+  if (
+    booking.status === Booked_Status.completed ||
+    booking.status === Booked_Status.cancelled
+  ) {
+    throw new Error("This booking cannot be cancelled");
+  }
+
+  // 3. Role-based ownership check
+  if (role === UserRole.STUDENT) {
+    if (booking.studentId !== userId) {
+      throw new Error("You are not allowed to cancel this booking");
+    }
+  }
+
+  if (role === UserRole.TUTOR) {
+    const tutorProfile = await prisma.tutorProfile.findUnique({
+      where: { id: userId },
+    });
+
+    if (!tutorProfile || booking.tutorId !== tutorProfile.id) {
+      throw new Error("You are not allowed to cancel this booking");
+    }
+  }
+
+  // 4. Cancel booking
+  return prisma.booking.update({
+    where: { id: bookingId },
+    data: {
+      status: Booked_Status.cancelled,
+    },
+  });
+};
+
+
 export const bookingService = {
   createBooking,
   getOwnBooking,
   getTutorBooking,
-  completeBooking
+  completeBooking,
+  cancelBooking
 };

@@ -28,4 +28,8 @@ router.patch(
   sessionAuth(UserRole.TUTOR),
   bookingController.completeBooking
 );
+// cancel booking
+
+router.patch("/:id/cancel", sessionAuth(UserRole.STUDENT, UserRole.TUTOR),
+  bookingController.cancelBooking)
 export const bookingRouter:Router = router;
