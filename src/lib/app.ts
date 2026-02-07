@@ -28,7 +28,7 @@ app.use('/api/bookings',bookingRouter)
 // review routes
 app.use("/api/reviews",userReview)
 // admin routes
-app.use("/api/admin",adminRouter)
+app.use("/api/admin/users",adminRouter)
 app.get('/',(req,res)=>{
     res.send("Ronaldo is the goat")
 })

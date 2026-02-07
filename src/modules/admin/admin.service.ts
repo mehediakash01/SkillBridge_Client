@@ -5,5 +5,25 @@ const getAllUser = async ()=>{
        
     );
 }
+const updateUserStatus = async (
+  userId: string,
+  isBanned: boolean
+) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
 
-export const adminService = {getAllUser};
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      isBanned,
+    },
+  });
+};
+
+
+export const adminService = {getAllUser,updateUserStatus};
