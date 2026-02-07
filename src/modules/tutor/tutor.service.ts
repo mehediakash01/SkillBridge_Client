@@ -148,11 +148,28 @@ const updateTutorAvailability = async(tutorUserId:string, slots:AvailabilitySlot
 
 }
 
+// getting all tutor data 
+const getAllTutors = async()=>{
+  return prisma.tutorProfile.findMany(
+  )
+}
+// getting all tutor data 
+const getTutorByID = async(tutorId:string)=>{
+  return prisma.tutorProfile.findUnique(
+    {
+      where:{
+        id:tutorId
+      }
+    }
+  )
+}
+
+
 
 // get tutors own availability
 export const getTutorAvailability = async (tutorUserId: string) => {
   const tutorProfile = await prisma.tutorProfile.findUnique({
-    where: { studentId: tutorUserId },
+    where: { id: tutorUserId },
   });
 
   if (!tutorProfile) {
@@ -184,5 +201,7 @@ export const tutorService = {
     createOrUpdateUser,
     getTutorProfileById,
     updateTutorAvailability,
-    getTutorAvailability
+    getTutorAvailability,
+    getAllTutors,
+    getTutorByID
 }

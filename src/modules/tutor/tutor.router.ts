@@ -24,4 +24,8 @@ const router = express.Router();
   tutorController.getMyAvailability
 );
 
+// get all tutors
+router.get("/",tutorController.getAllTutors)
+router.get("/:id",tutorController.getTutorById)
+
 export  const createTutor:Router = router

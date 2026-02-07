@@ -27,6 +27,34 @@ sendResponse(res,{
 }
 
 )
+// get all tutors
+const getAllTutors = catchAsync(async(req:Request,res:Response)=>{
+    
+    const result = await tutorService.getAllTutors()
+    sendResponse(res,{
+        statusCode:200,
+        success:true,
+        message:"retrieve all tutor successfully",
+        data:result
+    })
+})
+// get all tutors
+const getTutorById = catchAsync(async(req:Request,res:Response)=>{
+    const tutorId = req.params!.id;
+  
+    if (!tutorId){
+        throw new Error("TutorId is missing")
+    }
+    const result = await tutorService.getTutorByID(tutorId as string)
+    sendResponse(res,{
+        statusCode:200,
+        success:true,
+        message:"retrieve  tutor details successfully",
+        data:result
+    })
+})
+
+
 // get tutor profile
 const getMyProfile = catchAsync(
     async(req:Request,res:Response)=>{
@@ -89,5 +117,7 @@ export const getMyAvailability = catchAsync(
 
 export const tutorController = {
     createTutor, getMyProfile,updateTutorAvailability,
-    getMyAvailability
+    getMyAvailability,
+    getAllTutors,
+    getTutorById
 }

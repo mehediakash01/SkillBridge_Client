@@ -21,7 +21,7 @@ app.use(cors({
 ))
 app.all('/api/auth/{*any}', toNodeHandler(auth));
 // tutor routes
-app.use('/api/tutor',createTutor)
+app.use('/api/tutors',createTutor)
 // booking routes
 app.use('/api/bookings',bookingRouter)
 // review routes
