@@ -32,20 +32,39 @@ const createOrUpdateUser = async (userId:string,
 
 }
 // getting tutors profile by id
-const getTutorProfileById = async (userId:string)=>{
-    return  prisma.tutorProfile.findUnique({
-        where:{
-            studentId:userId
+const getTutorProfileById = async (id: string) => {
+  const tutor = await prisma.tutorProfile.findUnique({
+    where: {
+      id: id, 
+    },
+    include: {
+      Student: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
         },
-        include: {
+      },
       tutorSubjects: {
-        include: { category: true },
+        include: {
+          category: true,
+        },
       },
       bookings: true,
+      availabilities: true,
     },
-    })
+  })
 
+  if (!tutor) return null
+
+  return {
+    ...tutor,
+    hourlyRate: Number(tutor.hourlyRate),
+    averageRate: Number(tutor.averageRate),
+  }
 }
+
 // denoted tutor availability input types
 type AvailabilitySlotInput = {
   dayOfWeek: Week;
@@ -149,10 +168,32 @@ const updateTutorAvailability = async(tutorUserId:string, slots:AvailabilitySlot
 }
 
 // getting all tutor data 
-const getAllTutors = async()=>{
-  return prisma.tutorProfile.findMany(
-  )
+const getAllTutors = async () => {
+  const tutors = await prisma.tutorProfile.findMany({
+    include: {
+      Student: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+      tutorSubjects: {
+        include: {
+          category: true,
+        },
+      },
+    },
+  })
+
+  return tutors.map((tutor) => ({
+    ...tutor,
+    hourlyRate: Number(tutor.hourlyRate),
+    averageRate: Number(tutor.averageRate),
+  }))
 }
+
 // getting all tutor data 
 const getTutorByID = async(tutorId:string)=>{
   return prisma.tutorProfile.findUnique(
