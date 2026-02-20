@@ -35,7 +35,7 @@ const createOrUpdateUser = async (userId:string,
 const getTutorProfileById = async (id: string) => {
   const tutor = await prisma.tutorProfile.findUnique({
     where: {
-      id: id, 
+      id: id,   
     },
     include: {
       Student: {
@@ -51,8 +51,8 @@ const getTutorProfileById = async (id: string) => {
           category: true,
         },
       },
-      bookings: true,
       availabilities: true,
+      bookings: true,
     },
   })
 
@@ -64,6 +64,7 @@ const getTutorProfileById = async (id: string) => {
     averageRate: Number(tutor.averageRate),
   }
 }
+
 
 // denoted tutor availability input types
 type AvailabilitySlotInput = {
@@ -195,16 +196,38 @@ const getAllTutors = async () => {
 }
 
 // getting all tutor data 
-const getTutorByID = async(tutorId:string)=>{
-  return prisma.tutorProfile.findUnique(
-    {
-      where:{
-        id:tutorId
-      }
-    }
-  )
-}
+const getTutorByID = async (id: string) => {
+  const tutor = await prisma.tutorProfile.findUnique({
+    where: {
+      id: id,   
+    },
+    include: {
+      Student: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+      tutorSubjects: {
+        include: {
+          category: true,
+        },
+      },
+      availabilities: true,
+      bookings: true,
+    },
+  })
 
+  if (!tutor) return null
+
+  return {
+    ...tutor,
+    hourlyRate: Number(tutor.hourlyRate),
+    averageRate: Number(tutor.averageRate),
+  }
+}
 
 
 // get tutors own availability
