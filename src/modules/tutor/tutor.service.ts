@@ -130,6 +130,7 @@ const updateTutorAvailability = async(tutorUserId:string, slots:AvailabilitySlot
     }
   }
 
+
 // group by day
   const grouped: Record<string, AvailabilitySlotInput[]> = {};
   for (const slot of slots) {
@@ -149,23 +150,21 @@ const updateTutorAvailability = async(tutorUserId:string, slots:AvailabilitySlot
   }
 
 
+
    //  availability (transaction-safe)
-  await prisma.$transaction([
-    prisma.availability.deleteMany({
-      where: { tutorId: tutorProfile.id },
-    }),
-    prisma.availability.createMany({
-      data: slots.map(slot => ({
-        tutorId: tutorProfile.id,
-        dayOfWeek: slot.dayOfWeek,
-        startTime: new Date(`1970-01-01T${slot.startTime}:00Z`),
-        endTime: new Date(`1970-01-01T${slot.endTime}:00Z`),
-      })),
-    }),
-  ]);
-
-  return grouped;
-
+await prisma.$transaction([
+  prisma.availability.deleteMany({
+    where: { tutorId: tutorProfile.id },
+  }),
+  prisma.availability.createMany({
+    data: slots.map(slot => ({
+      tutorId: tutorProfile.id,
+      dayOfWeek: slot.dayOfWeek,
+      startTime: slot.startTime, 
+      endTime: slot.endTime,     
+    })),
+  }),
+]);
 }
 
 // getting all tutor data 
@@ -276,10 +275,11 @@ export const getTutorAvailability = async (tutorUserId: string) => {
     const day = slot.dayOfWeek;
     if (!grouped[day]) grouped[day] = [];
 
-    grouped[day].push({
-      startTime: slot.startTime.toISOString().slice(11, 16),
-      endTime: slot.endTime.toISOString().slice(11, 16),
-    });
+grouped[day].push({
+
+  startTime: slot.startTime as string,
+  endTime: slot.endTime as string,
+});
   });
 
   return grouped;

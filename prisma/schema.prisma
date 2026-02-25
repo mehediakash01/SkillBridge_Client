@@ -44,10 +44,11 @@ model Availability {
   id        String       @id @default(uuid())
   tutorId   String
   dayOfWeek Week
-  startTime DateTime
-  endTime   DateTime
+  startTime String
+  endTime   String
   Tutor     TutorProfile @relation(fields: [tutorId], references: [id])
 
+  @@unique([tutorId, dayOfWeek, startTime, endTime])
   @@index([dayOfWeek, startTime, endTime])
 }
 
