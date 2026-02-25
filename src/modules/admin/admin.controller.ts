@@ -4,13 +4,13 @@ import sendResponse from "../../utils/sendResponse.js";
 import { adminService } from "./admin.service.js";
 // getting all user
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
-    const result = await adminService.getAllUser ();
-    sendResponse(res,{
-        statusCode:200,
-        success:true,
-        message:"Retrieve all user successfully",
-        data:result
-    })
+  const result = await adminService.getAllUser()
+  sendResponse(res, {
+    success: true,
+    message: "Users retrieved successfully",
+    statusCode: 200,
+    data: result,
+  })
 })
 const updateUserStatus = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -35,7 +35,34 @@ const updateUserStatus = async (req: Request, res: Response) => {
 };
 
 
+// ── Bookings ──────────────────────────────────────────────
+
+const getAllBookings = catchAsync(async (req: Request, res: Response) => {
+  const result = await adminService.getAllBookings()
+  sendResponse(res, {
+    success: true,
+    message: "Bookings retrieved successfully",
+    statusCode: 200,
+    data: result,
+  })
+})
+
+// ── Stats ─────────────────────────────────────────────────
+
+const getStats = catchAsync(async (req: Request, res: Response) => {
+  const result = await adminService.getStats()
+  sendResponse(res, {
+    success: true,
+    message: "Stats retrieved successfully",
+    statusCode: 200,
+    data: result,
+  })
+})
+
+
 export const adminController = {
     getAllUser,
-    updateUserStatus
+    updateUserStatus,
+    getStats,
+    getAllBookings,
 }
