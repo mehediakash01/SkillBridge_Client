@@ -1,59 +1,64 @@
-// booking.service.ts
-import { Booked_Status } from "../../../generated/prisma/enums.js";
-import { prisma } from "../../lib/prisma.js";
-import { UserRole } from "../../middlewares/authMiddleware.js";
-
+import { Booked_Status } from "../../../generated/prisma/enums.js"
+import { prisma } from "../../lib/prisma.js"
+import { UserRole } from "../../middlewares/authMiddleware.js"
 
 interface BookingPayload {
-  tutorId: string;
-  startTime: string; 
-  endTime: string;   
+  tutorId: string
+  startTime: string
+  endTime: string
+  note?: string // ✅ was missing, frontend sends this
 }
 
-// Helper: convert Date to minutes (UTC)
-const toMinutes = (date: Date) => date.getUTCHours() * 60 + date.getUTCMinutes();
+const normalizeTime = (t: string | Date): string => {
+  if (t instanceof Date) return t.toISOString().substring(11, 16)
+  return t.substring(0, 5)
+}
 
-// booking creation
 const createBooking = async (studentId: string, payload: BookingPayload) => {
-  const { tutorId, startTime, endTime } = payload;
+  const { tutorId, startTime, endTime } = payload
 
-  const bookingStart = new Date(startTime);
-  const bookingEnd = new Date(endTime);
+  const bookingStart = new Date(startTime)
+  const bookingEnd = new Date(endTime)
+
+  if (isNaN(bookingStart.getTime()) || isNaN(bookingEnd.getTime())) {
+    throw new Error("Invalid booking time")
+  }
 
   if (bookingStart >= bookingEnd) {
-    throw new Error( "Invalid booking time range");
+    throw new Error("Invalid booking time range")
   }
 
-  // 1️ Check availability 
-  const weekday = bookingStart
-    .toLocaleDateString("en-US", { weekday: "short" })
-    .toLowerCase(); 
+  const weekMap = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+  const weekday = weekMap[bookingStart.getUTCDay()]
 
   const availabilities = await prisma.availability.findMany({
-    where: {
-      tutorId,
-      dayOfWeek: weekday as any,
-    },
-  });
+    where: { tutorId, dayOfWeek: weekday as any },
+  })
 
-  if (!availabilities || availabilities.length === 0) {
-    throw new Error( "Tutor has no availability on this day");
+  if (!availabilities.length) {
+    throw new Error("Tutor has no availability on this day")
   }
 
-  const bookingStartMinutes = toMinutes(bookingStart);
-  const bookingEndMinutes = toMinutes(bookingEnd);
+  const parseStr = (t: string | Date) => {
+    const str = normalizeTime(t) // ✅ handles "06:00", "06:00:00", or Date
+    const [h = 0, m = 0] = str.split(":").map(Number)
+    return h * 60 + m
+  }
+
+  const bookingStartMinutes = parseStr(bookingStart)
+  const bookingEndMinutes = parseStr(bookingEnd)
 
   const matchedAvailability = availabilities.find((slot) => {
-    const slotStart = toMinutes(slot.startTime);
-    const slotEnd = toMinutes(slot.endTime);
-
-    return slotStart <= bookingStartMinutes && slotEnd >= bookingEndMinutes;
-  });
+    const slotStart = parseStr(slot.startTime)
+    const slotEnd = parseStr(slot.endTime)
+    return slotStart <= bookingStartMinutes && slotEnd >= bookingEndMinutes
+  })
 
   if (!matchedAvailability) {
-    throw new Error( "Tutor not available at this time");
+    throw new Error("Tutor not available at this time")
   }
 
+  // ... rest of the function unchanged
   // 2️ Check booking conflicts 
   const conflict = await prisma.booking.findFirst({
     where: {

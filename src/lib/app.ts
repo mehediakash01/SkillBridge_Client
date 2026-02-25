@@ -8,6 +8,7 @@ import { bookingRouter } from "../modules/booking/booking.router.js";
 import { userReview } from "../modules/reviews/review.router.js";
 import { adminRouter } from "../modules/admin/admin.router.js";
 import { categoryRoutes } from "../modules/category/category.router.js";
+import { availableRouter } from "../modules/availability/available.router.js";
 
 
 
@@ -32,6 +33,8 @@ app.use("/api/reviews",userReview)
 // admin routes
 app.use("/api/admin/users",adminRouter)
 app.use("/api/categories",categoryRoutes)
+// availability routes
+app.use("/api/availability",availableRouter)
 app.get('/',(req,res)=>{
     res.send("Ronaldo is the goat")
 })
