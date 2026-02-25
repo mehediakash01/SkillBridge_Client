@@ -5,7 +5,7 @@ import sessionAuth, { UserRole } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 // create tutor profile
-  router.post('/profile',
+  router.put('/profile',
     sessionAuth(UserRole.TUTOR),
     tutorController.createTutor)
     // get tutor own profile
