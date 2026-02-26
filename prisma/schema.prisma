@@ -26,16 +26,17 @@ model TutorProfile {
 }
 
 model Booking {
-  id         String        @id @default(uuid())
-  studentId  String
-  tutorId    String
-  totalPrice Decimal
-  startTime  DateTime
-  endTime    DateTime
-  status     Booked_Status @default(pending)
-  Student    User          @relation(fields: [studentId], references: [id])
-  Tutor      TutorProfile  @relation(fields: [tutorId], references: [id])
-  reviews    Reviews[]
+  id          String        @id @default(uuid())
+  studentId   String
+  tutorId     String
+  totalPrice  Decimal
+  startTime   DateTime
+  endTime     DateTime
+  meetingLink String?
+  status      Booked_Status @default(pending)
+  Student     User          @relation(fields: [studentId], references: [id])
+  Tutor       TutorProfile  @relation(fields: [tutorId], references: [id])
+  reviews     Reviews[]
 
   @@index([totalPrice])
 }

@@ -23,6 +23,7 @@ router.get(
 );
 // getting booking details
 router.get("/:id",bookingController.getBookingDetails)
+router.patch("/:id/meeting-link", sessionAuth(UserRole.TUTOR), bookingController.updateMeetingLink); 
 
 // update booking status
 router.patch(

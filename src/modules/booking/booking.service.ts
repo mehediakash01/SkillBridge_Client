@@ -241,6 +241,37 @@ const cancelBooking = async (
   });
 };
 
+// ── Meeting link (tutor only) ─────────────────────────────
+
+const updateMeetingLink = async (
+  bookingId: string,
+  tutorUserId: string,
+  meetingLink: string
+) => {
+  const tutorProfile = await prisma.tutorProfile.findUnique({
+    where: { id: tutorUserId },
+  });
+
+  if (!tutorProfile) throw new Error("Tutor profile not found");
+
+  const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
+  if (!booking) throw new Error("Booking not found");
+
+  if (booking.tutorId !== tutorProfile.id)
+    throw new Error("You are not allowed to update this booking");
+
+  if (booking.status === Booked_Status.completed)
+    throw new Error("Cannot update a completed booking");
+
+  if (booking.status === Booked_Status.cancelled)
+    throw new Error("Cannot update a cancelled booking");
+
+  return prisma.booking.update({
+    where: { id: bookingId },
+    data: { meetingLink },
+  });
+};
+
 
 export const bookingService = {
   createBooking,
@@ -248,5 +279,6 @@ export const bookingService = {
   getTutorBooking,
   getBookingDetails,
   completeBooking,
-  cancelBooking
+  cancelBooking,
+  updateMeetingLink
 };

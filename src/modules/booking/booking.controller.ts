@@ -99,6 +99,25 @@ const cancelBooking = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// ── Meeting link (tutor only) ─────────────────────────────
+
+const updateMeetingLink = catchAsync(async (req: Request, res: Response) => {
+  const tutorUserId = req.user!.id;
+  const { meetingLink } = req.body;
+
+  if (!meetingLink) {
+    return sendResponse(res, { success: false, message: "Meeting link is required", statusCode: 400, data: null });
+  }
+
+  const result = await bookingService.updateMeetingLink(
+    req.params.id as string,
+    tutorUserId,
+    meetingLink
+  );
+  sendResponse(res, { success: true, message: "Meeting link updated", statusCode: 200, data: result });
+});
+
+
 
 export const bookingController = {
   createBooking,
@@ -106,5 +125,6 @@ export const bookingController = {
   getTutorBooking,
   getBookingDetails,
   completeBooking,
-  cancelBooking
+  cancelBooking,
+  updateMeetingLink
 };
