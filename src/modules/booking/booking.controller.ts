@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import sendResponse from "../../utils/sendResponse.js";
 import catchAsync from "../../utils/catchAsync.js";
 import { bookingService } from "./booking.service.js";
+import { prisma } from "../../lib/prisma.js";
 //booking creation
 const createBooking = catchAsync(async (req: Request, res: Response) => {
   const studentId = req.user!.id;
@@ -30,18 +31,31 @@ const getOwnBooking = catchAsync(async (req:Request,res:Response)=>{
     })
 })
 // getting tutor booking
-const getTutorBooking = catchAsync(async (req:Request,res:Response)=>{
-   const tutorId = req.user!.id;
+const getTutorBooking = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user!.id  
 
-    
-    const result = await bookingService.getTutorBooking(tutorId);
+ 
+  const tutorProfile = await prisma.tutorProfile.findUnique({
+    where: { studentId: userId },
+  })
 
-    sendResponse(res,{
-        success:true,
-        message:"retrieving booking successful",
-        statusCode:200,
-        data:result
+  if (!tutorProfile) {
+    return sendResponse(res, {
+      success: false,
+      message: "Tutor profile not found",
+      statusCode: 404,
+      data: null,
     })
+  }
+
+  const result = await bookingService.getTutorBooking(tutorProfile.id)
+
+  sendResponse(res, {
+    success: true,
+    message: "Bookings retrieved",
+    statusCode: 200,
+    data: result,
+  })
 })
 // getting  booking details
 const getBookingDetails = catchAsync(async (req:Request,res:Response)=>{

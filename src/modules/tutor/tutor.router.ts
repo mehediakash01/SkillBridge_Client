@@ -19,7 +19,7 @@ const router = express.Router();
 
         // get tutor own availability
         router.get(
-  "/availability/me",
+  "/availability",
   sessionAuth(UserRole.TUTOR),
   tutorController.getMyAvailability
 );
