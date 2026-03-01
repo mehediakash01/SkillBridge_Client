@@ -18,7 +18,8 @@
     "express": "^5.2.1",
     "js": "^0.1.0",
     "nodemailer": "^7.0.13",
-    "pg": "^8.18.0"
+    "pg": "^8.18.0",
+    "tsup": "^8.5.1"
   },
   "name": "skillbridge_client",
   "version": "1.0.0",
@@ -27,7 +28,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx watch server.ts",
-    "seed:admin": "npx tsx  src/scripts/seedAdmin.ts"
+    "seed:admin": "npx tsx  src/scripts/seedAdmin.ts",
+    "build":"prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir api --external pg-native",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
