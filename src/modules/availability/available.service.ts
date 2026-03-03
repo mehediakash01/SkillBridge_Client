@@ -1,3 +1,4 @@
+import { Availability, Booking } from "../../../generated/prisma/client.js"
 import { Booked_Status } from "../../../generated/prisma/enums.js"
 import { prisma } from "../../lib/prisma.js"
 
@@ -44,14 +45,14 @@ const getAvailabilityByDateFromDB = async (tutorId: string, date: string) => {
     },
   })
 
-  const result = availabilities.map((slot) => {
+  const result = availabilities.map((slot:Availability) => {
     const startTimeStr = normalizeTime(slot.startTime)
     const endTimeStr = normalizeTime(slot.endTime)
 
     const slotStart = parseTimeToMinutes(slot.startTime)
     const slotEnd = parseTimeToMinutes(slot.endTime)
 
-    const isBooked = bookings.some((booking) => {
+    const isBooked = bookings.some((booking:Booking) => {
       const bookingStart = toMinutes(booking.startTime)
       const bookingEnd = toMinutes(booking.endTime)
       return bookingStart < slotEnd && bookingEnd > slotStart

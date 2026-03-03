@@ -293,15 +293,14 @@ export const getTutorAvailability = async (tutorUserId: string) => {
 
   const grouped: Record<string, { startTime: string; endTime: string }[]> = {};
 
-  availability.forEach(slot => {
+   availability.forEach((slot: { dayOfWeek: string; startTime: string | Date; endTime: string | Date }) => {
     const day = slot.dayOfWeek;
     if (!grouped[day]) grouped[day] = [];
 
-grouped[day].push({
-
-  startTime: slot.startTime as string,
-  endTime: slot.endTime as string,
-});
+    grouped[day].push({
+      startTime: slot.startTime as string,
+      endTime: slot.endTime as string,
+    });
   });
 
   return grouped;

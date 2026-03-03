@@ -1,3 +1,4 @@
+import { Availability } from "../../../generated/prisma/client.js"
 import { Booked_Status } from "../../../generated/prisma/enums.js"
 import { prisma } from "../../lib/prisma.js"
 import { UserRole } from "../../middlewares/authMiddleware.js"
@@ -6,7 +7,7 @@ interface BookingPayload {
   tutorId: string
   startTime: string
   endTime: string
-  note?: string // ✅ was missing, frontend sends this
+  note?: string 
 }
 
 const normalizeTime = (t: string | Date): string => {
@@ -48,7 +49,7 @@ const createBooking = async (studentId: string, payload: BookingPayload) => {
   const bookingStartMinutes = parseStr(bookingStart)
   const bookingEndMinutes = parseStr(bookingEnd)
 
-  const matchedAvailability = availabilities.find((slot) => {
+  const matchedAvailability = availabilities.find((slot:Availability) => {
     const slotStart = parseStr(slot.startTime)
     const slotEnd = parseStr(slot.endTime)
     return slotStart <= bookingStartMinutes && slotEnd >= bookingEndMinutes

@@ -1,3 +1,4 @@
+import { Reviews } from "../../../generated/prisma/client.js";
 import { Booked_Status } from "../../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
 interface ReviewPayload {
@@ -35,7 +36,7 @@ const createReview = async (studentId: string, payload: ReviewPayload) => {
   });
 
   const avg =
-    allReviews.reduce((sum, r) => sum + Number(r.rating), 0) / allReviews.length;
+    allReviews.reduce((sum: number, r: Reviews) => sum + Number(r.rating), 0) / allReviews.length;
 
   await prisma.tutorProfile.update({
     where: { id: booking.tutorId },
