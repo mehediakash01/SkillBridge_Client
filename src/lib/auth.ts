@@ -47,6 +47,7 @@ export const auth = betterAuth({
           accessType:"offline",
             clientId: process.env.GOOGLE_CLIENT_ID as string, 
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
+            redirectURI: "https://skill-bridge-server-tau.vercel.app/api/auth/callback/google",
         }, 
     },
   emailVerification:{
