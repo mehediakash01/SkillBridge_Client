@@ -32,8 +32,8 @@ var auth = betterAuth({
   }),
   baseURL: process.env.BETTER_AUTH_URL || "https://skill-bridge-server-tau.vercel.app",
   trustedOrigins: [
-    "https://skill-bridge-client-1h8j.vercel.app",
-    "https://skill-bridge-server-tau.vercel.app"
+    process.env.APP_URL,
+    process.env.BETTER_AUTH_URL
   ],
   user: {
     additionalFields: {

@@ -17,8 +17,10 @@ app.use(globalErrorHandler);
 app.use(express.json())
 app.use(cors({
   origin: [
-    "https://skill-bridge-client-1h8j.vercel.app",
-    "https://skill-bridge-server-tau.vercel.app"
+   
+  
+    process.env.APP_URL as string,
+    process.env.BETTER_AUTH_URL as string
   ],
   credentials: true,       
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
