@@ -20,7 +20,9 @@ export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL || "https://skill-bridge-server-tau.vercel.app",
         trustedOrigins: [
         process.env.APP_URL as string,
-        process.env.BETTER_AUTH_URL as string
+        process.env.BETTER_AUTH_URL as string,
+        "https://skill-bridge-client-1h8j.vercel.app",
+        "https://skill-bridge-client-ex6c.vercel.app",
     ],
         advanced: {
       crossSubDomainCookies: {

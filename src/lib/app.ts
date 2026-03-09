@@ -15,14 +15,23 @@ import { availableRouter } from "../modules/availability/available.router.js";
 const app:Application = express()
 app.use(globalErrorHandler);
 app.use(express.json())
+const allowedOrigins = [
+  process.env.APP_URL,
+  "https://skill-bridge-client-1h8j.vercel.app",
+  "https://skill-bridge-client-ex6c.vercel.app",
+].filter(Boolean) as string[];
+
 app.use(cors({
-  
-  origin:process.env.APP_URL ||"https://skill-bridge-client-1h8j.vercel.app",
-    credentials:true
-}
-  
-   
-))
+  origin: (origin, callback) => {
+    // allow server-to-server calls (no origin) and listed client origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin '${origin}' not allowed`));
+    }
+  },
+  credentials: true,
+}))
 app.all('/api/auth/{*any}', toNodeHandler(auth));
 // tutor routes
 app.use('/api/tutors',createTutor)
