@@ -13,7 +13,6 @@ import { availableRouter } from "../modules/availability/available.router.js";
 
 
 const app:Application = express()
-app.use(globalErrorHandler);
 app.use(express.json())
 const allowedOrigins = [
   process.env.APP_URL,
@@ -47,4 +46,8 @@ app.use("/api/availability",availableRouter)
 app.get('/',(req,res)=>{
     res.send("Ronaldo is the goat")
 })
+
+// Global error handler must be last
+app.use(globalErrorHandler);
+
 export default app
