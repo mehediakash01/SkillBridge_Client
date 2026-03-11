@@ -21,7 +21,7 @@ export const auth = betterAuth({
         trustedOrigins: [
         process.env.APP_URL as string,
         process.env.BETTER_AUTH_URL as string,
-        "https://skill-bridge-client-1h8j.vercel.app",
+        "https://skill-bridge-client-sage.vercel.app",
         "https://skill-bridge-client-ex6c.vercel.app",
     ],
         advanced: {

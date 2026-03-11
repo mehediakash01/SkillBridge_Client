@@ -17,7 +17,7 @@ app.use(globalErrorHandler);
 app.use(express.json())
 const allowedOrigins = [
   process.env.APP_URL,
-  "https://skill-bridge-client-1h8j.vercel.app",
+  "https://skill-bridge-client-sage.vercel.app",
   "https://skill-bridge-client-ex6c.vercel.app",
 ].filter(Boolean) as string[];
 

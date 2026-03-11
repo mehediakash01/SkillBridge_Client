@@ -99,7 +99,7 @@ var auth = betterAuth({
   trustedOrigins: [
     process.env.APP_URL,
     process.env.BETTER_AUTH_URL,
-    "https://skill-bridge-client-1h8j.vercel.app",
+    "https://skill-bridge-client-sage.vercel.app",
     "https://skill-bridge-client-ex6c.vercel.app"
   ],
   advanced: {
@@ -1360,7 +1360,7 @@ app.use(globalErrorHandler_default);
 app.use(express6.json());
 var allowedOrigins = [
   process.env.APP_URL,
-  "https://skill-bridge-client-1h8j.vercel.app",
+  "https://skill-bridge-client-sage.vercel.app",
   "https://skill-bridge-client-ex6c.vercel.app"
 ].filter(Boolean);
 app.use(cors({
